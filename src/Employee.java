@@ -1,6 +1,5 @@
-public class Employee {
+public class Employee extends BaseEntity implements Identifiable {
     private final int employeeId;
-    private final int publicId;
     private final String fullName;
     private final String email;
     private final String jobTitle;
@@ -8,8 +7,8 @@ public class Employee {
     private final boolean active;
 
     public Employee(int employeeId, int publicId, String fullName, String email, String jobTitle, Integer departmentId, boolean active) {
+        super(publicId);
         this.employeeId = employeeId;
-        this.publicId = publicId;
         this.fullName = fullName;
         this.email = email;
         this.jobTitle = jobTitle;
@@ -18,7 +17,6 @@ public class Employee {
     }
 
     public int getEmployeeId() { return employeeId; }
-    public int getPublicId() { return publicId; }
     public String getFullName() { return fullName; }
     public String getEmail() { return email; }
     public String getJobTitle() { return jobTitle; }
@@ -27,7 +25,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return publicId + " | " + fullName + " | " + email + " | " + jobTitle +
+        return getPublicId() + " | " + fullName + " | " + email + " | " + jobTitle +
                 " | dept=" + (departmentId == null ? "none" : departmentId) +
                 " | active=" + active;
     }
