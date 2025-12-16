@@ -1,8 +1,6 @@
 # Eclipse
 .metadata
 .settings
-.project
-.classpath
 
 # Java
 bin
