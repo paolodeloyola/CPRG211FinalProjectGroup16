@@ -85,11 +85,15 @@ public class Main {
 
     private static void updateFlow() throws InvalidInputException, RecordNotFoundException, DuplicateRecordException, SQLException {
         int id = readInt("Employee ID to update: ");
-        String name = readLine("New full name: ");
-        String email = readLine("New email: ");
-        String title = readLine("New job title: ");
-        Integer dept = readNullableInt("New department ID (blank for none): ");
-        boolean active = readYesNo("Active (y/n): ");
+
+        Employee current = dao.getEmployeeById(id);
+        System.out.println("Leave field blank to keep current \nCurrent: " + current);
+
+        String name = readLineKeepOld("Full Name: ", current.getFullName());
+        String email = readLineKeepOld("E-mail: ", current.getEmail());
+        String title = readLineKeepOld("Job Title: ", current.getJobTitle());
+        Integer dept = readIntKeepOldNullable("Department ID: ", current.getDepartmentId());
+        boolean active = readYesNoKeepOld("Active (y/n): ", current.isActive());
 
         dao.updateEmployee(id, name, email, title, dept, active);
         System.out.println("Updated.");
@@ -139,5 +143,36 @@ public class Main {
     private static String readLine(String prompt) {
         System.out.print(prompt);
         return sc.nextLine();
+    }
+
+    private static String readLineKeepOld(String prompt, String oldVal) {
+        System.out.print(prompt);
+        String s = sc.nextLine();
+        if (s.trim().isEmpty()) return oldVal;
+        return s;
+    }
+
+    private static Integer readIntKeepOldNullable(String prompt, Integer oldVal) {
+        while (true) {
+            System.out.print(prompt);
+            String s = sc.nextLine().trim();
+            if (s.isEmpty()) return oldVal;
+            try {
+                return Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                System.out.println("Enter an integer or leave blank.");
+            }
+        }
+    }
+
+    private static boolean readYesNoKeepOld(String prompt, boolean oldVal) {
+        while (true) {
+            System.out.print(prompt);
+            String s = sc.nextLine().trim().toLowerCase();
+            if (s.isEmpty()) return oldVal;
+            if (s.equals("y") || s.equals("yes")) return true;
+            if (s.equals("n") || s.equals("no")) return false;
+            System.out.println("Type y or n, or leave blank.");
+        }
     }
 }
